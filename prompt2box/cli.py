@@ -139,9 +139,10 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             detector = Detector(api_key=api_key, model=args.model, max_image_size=args.max_size)
-        result = detector.detect(
-            image, prompt=args.prompt, classes=args.classes, refine=args.refine
-        )
+        with detector:  # release the client's connection pool when done
+            result = detector.detect(
+                image, prompt=args.prompt, classes=args.classes, refine=args.refine
+            )
     except FileNotFoundError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

@@ -135,9 +135,11 @@ class Detection:
         """Crop this box out of ``image_path`` and save it to ``output_path``."""
         from PIL import Image
 
+        src = Path(image_path).expanduser()
+        _register_heif(src)  # HEIC sources must open here too, not only in detect()
         out = Path(output_path).expanduser()
         out.parent.mkdir(parents=True, exist_ok=True)
-        with Image.open(Path(image_path).expanduser()) as img:
+        with Image.open(src) as img:
             img.crop(self.box).save(out)
         return out
 
@@ -625,6 +627,9 @@ def _prepare_image(path: Path, max_size: int) -> tuple[bytes, str, int, int]:
     _register_heif(path)
     with Image.open(path) as img:
         width, height = img.size
+        # Prefer the format Pillow actually decoded over the file extension, so a
+        # misnamed file (a JPEG saved as .png) is uploaded with the right type.
+        mime_type = Image.MIME.get(img.format or "") or _guess_mime_type(path)
         if max_size and max(width, height) > max_size:
             import io
 
@@ -653,7 +658,7 @@ def _prepare_image(path: Path, max_size: int) -> tuple[bytes, str, int, int]:
             return buf.getvalue(), out_mime, width, height
 
     # Small enough — upload the original bytes untouched.
-    return path.read_bytes(), _guess_mime_type(path), width, height
+    return path.read_bytes(), mime_type, width, height
 
 
 def _response_text(response) -> str:

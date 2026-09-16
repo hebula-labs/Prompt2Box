@@ -1,16 +1,42 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
 [project]
 name = "prompt2box"
 version = "0.1.0"
-description = "Gemini object detection in one import — labeled bounding boxes from a local image"
+description = "Gemini object detection in one import: labeled bounding boxes from a local image"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Jin Tan Ruan" }]
-keywords = ["gemini", "object-detection", "bounding-box", "computer-vision", "llm"]
+maintainers = [{ name = "Hebula Labs" }]
+keywords = [
+    "gemini",
+    "object-detection",
+    "bounding-box",
+    "computer-vision",
+    "llm",
+    "vertex-ai",
+    "zero-shot",
+]
 classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 # Floors reflect the APIs we actually use and test against (developed on
 # google-genai 2.9, Pillow 11). google-genai pinned to the 2.x line because we
@@ -23,26 +49,45 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0", "ruff>=0.6", "mypy>=1.8"]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.6",
+    "mypy>=1.8",
+]
 heic = ["pillow-heif>=0.13"]
 
 [project.urls]
-Homepage = "https://github.com/ztanruan/Prompt2Box"
-Repository = "https://github.com/ztanruan/Prompt2Box"
-Issues = "https://github.com/ztanruan/Prompt2Box/issues"
+Homepage = "https://github.com/hebula-labs/Prompt2Box"
+Repository = "https://github.com/hebula-labs/Prompt2Box"
+Issues = "https://github.com/hebula-labs/Prompt2Box/issues"
+Changelog = "https://github.com/hebula-labs/Prompt2Box/blob/main/CHANGELOG.md"
 
 [project.scripts]
 prompt2box = "prompt2box.cli:main"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [tool.hatch.build.targets.wheel]
 packages = ["prompt2box"]
 
+[tool.hatch.build.targets.sdist]
+# Keep the sdist to what is needed to build, test, and read about the package.
+exclude = ["/.github", "/docs", "/eval", "/examples", "/.pre-commit-config.yaml", "/.editorconfig"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-ra"
+xfail_strict = true
+
+[tool.coverage.run]
+source = ["prompt2box"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
 
 [tool.ruff]
 line-length = 100

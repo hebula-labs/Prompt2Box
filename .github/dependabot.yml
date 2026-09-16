@@ -1,0 +1,21 @@
+# Keeps dependency floors and pinned GitHub Actions current. Updates are grouped
+# so a week's worth of bumps arrives as one reviewable PR per ecosystem.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      github-actions:
+        patterns: ["*"]

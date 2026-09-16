@@ -72,3 +72,29 @@ def test_heic_without_pillow_heif_raises_clear_error(tmp_path):
 
     with pytest.raises(RuntimeError, match="pillow-heif"):
         _register_heif(tmp_path / "photo.heic")
+
+
+def test_mime_type_follows_decoded_format_not_extension(tmp_path):
+    """A JPEG saved under a misleading .png name is still uploaded as image/jpeg."""
+    misnamed = tmp_path / "actually_a_jpeg.png"
+    Image.new("RGB", (64, 64), (5, 5, 5)).save(misnamed, format="JPEG")
+
+    _, mime, _, _ = _prepare_image(misnamed, max_size=1536)
+
+    assert mime == "image/jpeg"
+
+
+def test_crop_registers_heif_for_its_source(tmp_path, monkeypatch):
+    """crop() must go through the same HEIF registration as detect() and drawing."""
+    import prompt2box.detector as det_mod
+
+    seen: list = []
+    monkeypatch.setattr(det_mod, "_register_heif", lambda p: seen.append(p))
+    src = tmp_path / "photo.png"
+    Image.new("RGB", (40, 20), (1, 2, 3)).save(src)
+
+    det = det_mod.Detection(label="x", x_min=0, y_min=0, x_max=10, y_max=10)
+    out = det.crop(src, tmp_path / "crop.png")
+
+    assert out.is_file()
+    assert seen == [src]

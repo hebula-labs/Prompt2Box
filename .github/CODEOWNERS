@@ -1,0 +1,10 @@
+# Code owners are automatically requested for review on every pull request
+# and can be required approvers in branch protection.
+#
+# Ownership belongs to an org team, not an individual account, so it survives
+# personnel changes. One-time setup in the hebula-labs org:
+#   Teams -> New team -> name "maintainers" -> add the maintainers ->
+#   give the team Write access to this repository.
+# Until that team exists GitHub flags this line as an unknown owner and does
+# not request reviews.
+*  @hebula-labs/maintainers

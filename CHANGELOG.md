@@ -7,6 +7,45 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- `python -m prompt2box` runs the CLI, for environments where the console
+  script is not on `PATH`.
+- End-to-end CLI tests (JSON output, annotated image, exit codes) using a fake
+  detector, so the command-line path is covered without network access.
+
+### Changed
+- The project now lives under the Hebula Labs organization; all repository
+  links, badges, and packaging metadata point at
+  `github.com/hebula-labs/Prompt2Box`.
+- Packaging metadata: PEP 639 license expression, full Python-version and
+  `Typing :: Typed` classifiers, and a `Changelog` project URL.
+
+### Fixed
+- The upload MIME type is taken from the format Pillow actually decoded rather
+  than the file extension, so a misnamed file (a JPEG saved as `.png`) is sent
+  with the correct type.
+- `Detection.crop()` now opens HEIC/HEIF sources, registering the HEIF opener
+  the same way `detect()` and `save_annotated()` do.
+- The CLI closes its Gemini client after detection instead of leaving the
+  connection pool to be garbage-collected.
+
+### Tooling
+- CI: least-privilege token permissions, cancellation of superseded runs, pip
+  caching, macOS and Windows runs, coverage reporting, a package build with a
+  clean-environment wheel smoke test, and a single `CI passed` status check for
+  branch protection.
+- Tag-driven `Release` workflow that re-runs the quality gate, verifies the tag
+  matches `pyproject.toml`, and attaches the sdist and wheel to a GitHub
+  Release. PyPI publishing is opt-in via the `PUBLISH_TO_PYPI` repository
+  variable and Trusted Publishing.
+- CodeQL scanning, Dependabot (pip and GitHub Actions, grouped weekly), YAML
+  issue forms, a pull request template, `CODEOWNERS`, `SECURITY.md`,
+  `CODE_OF_CONDUCT.md`, and `.editorconfig`.
+- Pre-commit hooks updated (ruff 0.16, pre-commit-hooks 6.0) and extended with
+  JSON, merge-conflict, and private-key checks.
+
+## [0.1.0] - 2026-06-27
+
+### Added
 - `detect()` one-shot API and reusable `Detector` class.
 - `Detection` / `DetectionResult` result objects (crop, filter, to_json,
   save_annotated, list-like access).
@@ -19,7 +58,7 @@ All notable changes to this project are documented here. The format is based on
 - Dev tooling: pre-commit (ruff + ruff-format), `examples/detect.py`,
   and `CITATION.cff`.
 - Automatic downscaling of large images before upload (`max_image_size` /
-  `--max-size`) — cuts cost/latency without affecting accuracy.
+  `--max-size`) - cuts cost/latency without affecting accuracy.
 - HEIC/HEIF support via the optional `[heic]` extra (`pillow-heif`), with a
   clear error when it's missing.
 - IoU evaluation harness in `eval/` (precision / recall / mean-IoU) plus
@@ -51,6 +90,7 @@ All notable changes to this project are documented here. The format is based on
   HEIF registration is thread-safe.
 - CLI `.env` parsing tolerates `export ` and inline comments.
 - Typed (`py.typed`) and type-checked (mypy in CI); CI also enforces
-  `ruff format` and runs on Python 3.10–3.13.
+  `ruff format` and runs on Python 3.10-3.13.
 
-[Unreleased]: https://github.com/ztanruan/Prompt2Box/commits/main
+[Unreleased]: https://github.com/hebula-labs/Prompt2Box/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/hebula-labs/Prompt2Box/releases/tag/v0.1.0

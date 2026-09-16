@@ -1,17 +1,21 @@
 <div align="center">
 
-<img src="docs/logo.svg" alt="Prompt2Box" width="620">
+<img src="https://raw.githubusercontent.com/hebula-labs/Prompt2Box/main/docs/logo.svg" alt="Prompt2Box" width="620">
 
 **Object detection without a model. Point it at an image, get back labeled bounding boxes - powered by Gemini.**
 
-[![CI](https://github.com/ztanruan/Prompt2Box/actions/workflows/ci.yml/badge.svg)](https://github.com/ztanruan/Prompt2Box/actions/workflows/ci.yml)
+[![CI](https://github.com/hebula-labs/Prompt2Box/actions/workflows/ci.yml/badge.svg)](https://github.com/hebula-labs/Prompt2Box/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/hebula-labs/Prompt2Box/actions/workflows/codeql.yml/badge.svg)](https://github.com/hebula-labs/Prompt2Box/actions/workflows/codeql.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![Model: Gemini](https://img.shields.io/badge/model-Gemini-4285F4)](https://ai.google.dev/)
+[![Typed](https://img.shields.io/badge/typing-typed-informational)](./prompt2box/py.typed)
+
+<sub>An open-source project by <a href="https://github.com/hebula-labs">Hebula Labs</a></sub>
 
 <br>
 
-<img src="docs/demo.jpg" alt="Detected objects with bounding boxes and labels" width="760">
+<img src="https://raw.githubusercontent.com/hebula-labs/Prompt2Box/main/docs/demo.jpg" alt="Detected objects with bounding boxes and labels" width="760">
 
 <sub>One call. No training, no weights, no GPU - just a file path and an API key.</sub>
 
@@ -37,9 +41,11 @@ result.save_annotated("out.jpg")
 Not on PyPI yet - install from source:
 
 ```bash
-git clone https://github.com/ztanruan/Prompt2Box && cd Prompt2Box
-pip install -e .
+git clone https://github.com/hebula-labs/Prompt2Box && cd Prompt2Box
+pip install .
 ```
+
+Python 3.10 or newer, on Linux, macOS, or Windows.
 
 You need a Gemini API key - get one at [aistudio.google.com/apikey](https://aistudio.google.com/apikey):
 
@@ -85,6 +91,7 @@ prompt2box desk.jpg -c laptop camera book # only these labels
 prompt2box desk.jpg -p "only the plants"  # free-form instruction
 prompt2box desk.jpg --refine              # drop whole-image / duplicate boxes
 prompt2box desk.jpg --no-image | jq -r '.[].label'
+python -m prompt2box desk.jpg             # same thing, no entry point needed
 ```
 
 ## How it works
@@ -160,6 +167,10 @@ prompt2box desk.jpg --vertex
 detect("desk.jpg", vertexai=True, project="your-project-id")
 ```
 
+Prompt2Box never writes your key to disk or logs it. Prefer the environment
+variable or a `.env` file over `--api-key`, which can end up in shell history.
+See [SECURITY.md](./SECURITY.md) for more.
+
 ## CLI reference
 
 ```
@@ -179,8 +190,12 @@ prompt2box IMAGE [options]
 | `--vertex` / `--project` / `--location` | Use Vertex AI |
 | `--api-key` | Override `GEMINI_API_KEY` |
 | `-v, --verbose` | Verbose logging to stderr |
+| `--version` | Print the installed version |
 
 JSON goes to **stdout**, status lines to **stderr** - pipe cleanly.
+
+Exit codes: `0` success, `1` detection failed (API, auth, or parse error),
+`2` usage or input error (missing key, missing image).
 
 ## Output format
 
@@ -229,7 +244,7 @@ networks need it.
 No - it calls Gemini. The *test suite* runs fully offline (the client is faked).
 
 **Which model should I use? Can I use Claude / Llama / other models?**
-Any **Gemini** vision model works — `gemini-2.5-flash` (default) is fast and
+Any **Gemini** vision model works - `gemini-2.5-flash` (default) is fast and
 cheap, `gemini-2.5-pro` is more accurate on busy images, and newer Gemini
 versions work too. Set it with `-m` or `model=`.
 Non-Gemini models (Claude, Llama, Mistral on Vertex) are **not supported for
@@ -239,22 +254,44 @@ other models don't return usable boxes. Pass one and you'll get a warning.
 **Is it on PyPI?**
 Not yet - install from source (above).
 
+## Project status
+
+Prompt2Box is pre-1.0. The public API (`detect`, `Detector`, `Detection`,
+`DetectionResult`, `RefineConfig`) is stable in spirit, but minor releases may
+still change signatures. Every user-visible change is recorded in
+[CHANGELOG.md](./CHANGELOG.md), and releases follow
+[Semantic Versioning](https://semver.org/).
+
 ## Development
 
 ```bash
 pip install -e ".[dev]"
-pre-commit install          # optional
-pytest                      # 71 tests, no key or network needed
+pre-commit install          # optional: runs ruff on each commit
+pytest                      # no key or network needed
 ruff check . && ruff format --check .
 mypy
 ```
 
 The suite injects a fake client, so it's fully offline. A real-API smoke test in
-`tests/test_integration.py` runs only when credentials are present. CI runs ruff,
-mypy, and pytest on Python 3.10-3.13. Runnable examples live in
+`tests/test_integration.py` runs only when credentials are present. CI runs
+ruff, mypy, and pytest on Python 3.10-3.13 (Linux), plus macOS and Windows, and
+builds and smoke-installs the wheel on every push. Runnable examples live in
 [`examples/`](./examples).
+
+## Community
+
+- [Contributing guide](./CONTRIBUTING.md) - dev setup, quality gate, and how to
+  get a change merged.
+- [Code of Conduct](./CODE_OF_CONDUCT.md) - we follow the Contributor Covenant.
+- [Security policy](./SECURITY.md) - how to report a vulnerability privately.
+- [Issues](https://github.com/hebula-labs/Prompt2Box/issues) - bugs and feature
+  requests, via the provided templates.
 
 ## License
 
 MIT - see [LICENSE](./LICENSE). Demo images derive from
 [Unsplash](https://unsplash.com/license); see [docs/CREDITS.md](./docs/CREDITS.md).
+
+Maintained by [Hebula Labs](https://github.com/hebula-labs). To cite Prompt2Box
+in academic work, use the metadata in [CITATION.cff](./CITATION.cff) or the
+"Cite this repository" button on GitHub.

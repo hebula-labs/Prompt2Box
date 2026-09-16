@@ -14,6 +14,7 @@ For repeated calls, build a Detector once:
     results = det.detect_batch(["a.jpg", "b.jpg"])   # concurrent
 """
 
+import logging
 from importlib.metadata import PackageNotFoundError, version
 
 from prompt2box.detector import (
@@ -29,6 +30,11 @@ try:
     __version__ = version("prompt2box")
 except PackageNotFoundError:  # running from a source tree without install
     __version__ = "0.0.0+dev"
+
+# Library convention: attach a NullHandler so applications that never configure
+# logging see no "No handlers could be found" noise, while applications that do
+# configure it still receive our records.
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __all__ = [
     "detect",

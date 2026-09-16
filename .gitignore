@@ -1,11 +1,34 @@
+# Python
 __pycache__/
 *.py[cod]
 *.egg-info/
+*.egg
+.eggs/
 build/
 dist/
+
+# Environments and secrets
 .venv/
 venv/
 .env
-*_boxed.*
+.env.*
+!.env.example
 
+# Tooling caches and reports
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
 .DS_Store
+
+# Prompt2Box outputs
+*_boxed.*
+example_out.jpg

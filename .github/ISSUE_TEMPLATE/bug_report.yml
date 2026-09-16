@@ -1,0 +1,67 @@
+name: Bug report
+description: Something didn't work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. **Never paste an API key.** Redact any `AIza…` value before submitting.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: A clear description of the bug, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Command or code to reproduce
+      description: The exact `prompt2box` command or Python snippet you ran.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Full error output
+      description: The complete traceback or error message, with any keys redacted.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Prompt2Box version
+      description: Output of `prompt2box --version`
+      placeholder: prompt2box 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: genai-version
+    attributes:
+      label: google-genai version
+      description: Output of `pip show google-genai`
+  - type: input
+    id: environment
+    attributes:
+      label: Python version and operating system
+      placeholder: Python 3.12.4 on macOS 15
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      options:
+        - Developer API (GEMINI_API_KEY)
+        - Vertex AI (--vertex)
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I removed every API key and secret from this report.
+          required: true
