@@ -52,8 +52,11 @@ dependencies = [
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
-    "ruff>=0.6",
-    "mypy>=1.8",
+    # Formatter and type checker are pinned exactly (keep in sync with
+    # .pre-commit-config.yaml). New releases change style and add checks, so
+    # they should arrive as reviewable Dependabot PRs, not break main silently.
+    "ruff==0.16.7",
+    "mypy==2.3.1",
 ]
 heic = ["pillow-heif>=0.13"]
 
@@ -92,6 +95,10 @@ exclude_also = [
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+# Ruff 0.16+ formats Python code blocks inside Markdown by default. The README
+# snippets use aligned trailing comments for readability, so keep Markdown out
+# of both the linter and the formatter.
+extend-exclude = ["*.md"]
 
 [tool.ruff.lint]
 # pyflakes, pycodestyle, isort, pyupgrade, bugbear, comprehensions

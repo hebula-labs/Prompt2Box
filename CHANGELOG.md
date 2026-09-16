@@ -42,6 +42,9 @@ All notable changes to this project are documented here. The format is based on
   `CODE_OF_CONDUCT.md`, and `.editorconfig`.
 - Pre-commit hooks updated (ruff 0.16, pre-commit-hooks 6.0) and extended with
   JSON, merge-conflict, and private-key checks.
+- `ruff` and `mypy` are pinned to exact versions in the `dev` extra, and
+  Markdown files are excluded from ruff, so formatter upgrades land as
+  Dependabot PRs rather than failing CI unannounced.
 
 ## [0.1.0] - 2026-06-27
 
