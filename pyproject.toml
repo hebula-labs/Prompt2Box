@@ -55,7 +55,7 @@ dev = [
     # Formatter and type checker are pinned exactly (keep in sync with
     # .pre-commit-config.yaml). New releases change style and add checks, so
     # they should arrive as reviewable Dependabot PRs, not break main silently.
-    "ruff==0.16.7",
+    "ruff==0.16.8",
     "mypy==2.3.1",
 ]
 heic = ["pillow-heif>=0.13"]
